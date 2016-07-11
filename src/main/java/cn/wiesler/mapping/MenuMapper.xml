@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wiesler.dao.MenuMapper" >
+  <resultMap id="BaseResultMap" type="cn.wiesler.pojo.Menu" >
+    <id column="DId" property="did" jdbcType="INTEGER" />
+    <result column="DName" property="dname" jdbcType="VARCHAR" />
+    <result column="DPrice" property="dprice" jdbcType="INTEGER" />
+    <result column="DType" property="dtype" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DId, DName, DPrice, DType
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from Menu
+    where DId = #{did,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from Menu
+    where DId = #{did,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.wiesler.pojo.Menu" >
+    insert into Menu (DId, DName, DPrice, 
+      DType)
+    values (#{did,jdbcType=INTEGER}, #{dname,jdbcType=VARCHAR}, #{dprice,jdbcType=INTEGER}, 
+      #{dtype,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.wiesler.pojo.Menu" >
+    insert into Menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="did != null" >
+        DId,
+      </if>
+      <if test="dname != null" >
+        DName,
+      </if>
+      <if test="dprice != null" >
+        DPrice,
+      </if>
+      <if test="dtype != null" >
+        DType,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="did != null" >
+        #{did,jdbcType=INTEGER},
+      </if>
+      <if test="dname != null" >
+        #{dname,jdbcType=VARCHAR},
+      </if>
+      <if test="dprice != null" >
+        #{dprice,jdbcType=INTEGER},
+      </if>
+      <if test="dtype != null" >
+        #{dtype,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.wiesler.pojo.Menu" >
+    update Menu
+    <set >
+      <if test="dname != null" >
+        DName = #{dname,jdbcType=VARCHAR},
+      </if>
+      <if test="dprice != null" >
+        DPrice = #{dprice,jdbcType=INTEGER},
+      </if>
+      <if test="dtype != null" >
+        DType = #{dtype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DId = #{did,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.wiesler.pojo.Menu" >
+    update Menu
+    set DName = #{dname,jdbcType=VARCHAR},
+      DPrice = #{dprice,jdbcType=INTEGER},
+      DType = #{dtype,jdbcType=VARCHAR}
+    where DId = #{did,jdbcType=INTEGER}
+  </update>
+</mapper>
