@@ -32,5 +32,14 @@
 
     <!-- 全局异常处理器,只要实现了HandlerExceptionResolver接口的类，都是全局异常处理器，不需要定义id，同时只能有一个全局处理器 -->
     <bean class="cn.wiesler.exception.CustomExceptionResolver"/>
-
+    
+    <!-- 定义拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!-- 拦截所有请求，类似于全局拦截器 -->
+            <mvc:mapping path="/**"/>
+            <bean class="cn.wiesler.interceptor.HandlerInterceptorDemo"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    
 </beans>
