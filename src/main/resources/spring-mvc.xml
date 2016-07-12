@@ -20,6 +20,9 @@
     <!-- 声明处理器映射器和适配器 -->
     <mvc:annotation-driven/>
 
+    <!-- 静态资源解析器，包括：js、css、img... -->
+    <!--<mvc:resources mapping="/img/**" location="" />-->
+
     <!-- 定义跳转的文件的前后缀 ，视图模式配置-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <!-- 这里的配置我的理解是自动给后面action的方法return的字符串加上前缀和后缀，变成一个可用的url地址 -->
