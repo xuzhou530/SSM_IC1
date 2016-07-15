@@ -3,6 +3,7 @@ package cn.wiesler.controller;
 import cn.wiesler.exception.CustomException;
 import cn.wiesler.pojo.Users;
 import cn.wiesler.pojo.UsersCustom;
+import cn.wiesler.pojo.UsersQueryVo;
 import cn.wiesler.service.IUsersService;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by 时光机器 on 2016/7/11.
@@ -45,4 +47,23 @@ public class UsersController {
         return "Users/showUsers";
     }
 
+    @RequestMapping("/showUsers")
+    public String findUsersById(Model model, Integer uid) throws Exception{
+        UsersCustom usersCustom = this.usersService.findUsersById(uid);
+        model.addAttribute("usersCustom", usersCustom);
+        return "Users/showUsers";
+    }
+    @RequestMapping("/usersList/{uname}")
+    public String findUsersByName(Model model, @PathVariable("uname") String uname) throws Exception{
+        List<UsersCustom> usersCustomList = this.usersService.findUsersByName(uname);
+        model.addAttribute("usersCustom", usersCustomList);
+        return "Users/UsersList";
+    }
+
+    @RequestMapping("/usersListBy")
+    public String findUsersBy(Model model, UsersQueryVo usersQueryVo) throws Exception{
+        List<UsersCustom> usersCustomList1 = this.usersService.findUsersBy(usersQueryVo);
+        model.addAttribute("usersCustom", usersCustomList1);
+        return "Users/UsersList";
+    }
 }
