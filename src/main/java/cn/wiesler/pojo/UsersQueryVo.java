@@ -1,5 +1,7 @@
 package cn.wiesler.pojo;
 
+import java.util.List;
+
 /**
  * Created by 时光机器 on 2016/7/12.
  * 包装类，便于管理用户、商品等。如果用户、商品信息都在一个类中是简单属性，就会杂乱，不便于维护
@@ -8,6 +10,17 @@ package cn.wiesler.pojo;
 
 
 public class UsersQueryVo {
+
+    //传入多个用户ID使用的List
+    private List<Integer> uids;
+
+    public List<Integer> getUids() {
+        return uids;
+    }
+
+    public void setUids(List<Integer> uids) {
+        this.uids = uids;
+    }
 
     private UsersCustom usersCustom;
 
