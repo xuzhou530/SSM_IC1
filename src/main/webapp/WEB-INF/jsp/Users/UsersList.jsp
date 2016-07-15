@@ -22,9 +22,22 @@
 </head>
 <body>
 <form name="usersForm" method="post">
-<input type="button" value="查询" onclick="showUsers()">
+<table border="1px">
+
 <!-- 一定要注意向封装类Vo中传值时，用XXX.XXX的形式传参，否则在Controller层是接收不到参数的 -->
-<input type="text" name="usersCustom.uname"/></td>
+    <tr>
+        <td>名称：</td><td><input type="text" name="usersCustom.uname"/>
+    </td>
+    <tr>
+        <td>是否卖家：</td>
+        <%--<td><input type="text" name="usersCustom.isbusiness"/></td>--%>
+        <td>是<input type="checkbox" name="usersCustom.isbusiness" value="TRUE"></td>
+        <td>否<input type="checkbox" name="usersCustom.isbusiness" value="FALSE"></td>
+    </tr>
+    <tr>
+        <td><input type="button" value="查询" onclick="showUsers()"></td>
+    </tr>
+</table>
 </form>
 <table border="1px">
     <tr>
