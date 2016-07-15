@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wiesler.dao.UsersMapper" >
+
+    <resultMap id="BaseResultMapCustom" type="cn.wiesler.pojo.UsersCustom" >
+        <!-- id是对唯一标识列进行映射-->
+        <id column="UId" property="uid" jdbcType="INTEGER" />
+        <!-- result是对其他列进行映射-->
+        <result column="UName" property="uname" jdbcType="VARCHAR" />
+        <result column="UPassword" property="upassword" jdbcType="VARCHAR" />
+        <result column="IsBusiness" property="isbusiness" jdbcType="BIT" />
+    </resultMap>
+
+    <!--
+    id:标识文件中的SQL，将SQL语句封装到MappedStatement对象中，所以将id称为Statement的id
+    parameterYype:指定输入参数的类型，这里指定int。现在都不用parameterMap的
+    #{id}:其中id表示接收输入的参数，参数名称就是id，如果输入参数是简单类型，#{}中的参数名可以任意，可以value或其他名称,
+    和实际中前端传过来的参数名称无关
+    resultYype:使用resultType进行输出映射，只有查询出来的列名和pojo中的属性名一致，该列才可映射成功
+    resultMap:经实际测试，每个xml文件中的resultMap的id名称不能相同。可以实现高级输出结果映射（一对多、多对多等）
+    -->
+
+    <select id="findUsersById" parameterType="java.lang.Integer" resultMap="BaseResultMapCustom">
+        SELECT * FROM Users WHERE uid=#{value}
+    </select>
+
+    <!-- 返回的是多条记录，所以dao层里的返回值是List<UsersCustom> -->
+    <select id="findUsersByName" parameterType="java.lang.String" resultMap="BaseResultMapCustom">
+        SELECT * FROM Users WHERE uname LIKE '%${value}%';
+    </select>
+
+    <!--
+    定义SQL片段
+    经验：1、基于单表来定义SQL片段，这样SQL片段可重用性才高
+          2、在SQL片段中不要包含<where>
+    -->
+    <sql id="query_users_where">
+            <if test="usersCustom!=null">
+                <if test="usersCustom.uname!=null and usersCustom.uname!=''">
+                    <!-- 这里的表名一定是和数据库中表名大小写一致的，否则SQL语句执行会出错，不能忽略大小写 -->
+                    and Users.uname LIKE '%${usersCustom.uname}%'
+                </if>
+                <if test="usersCustom.isbusiness!=null and usersCustom.isbusiness!=''">
+                    <!-- 布尔值判断这里还有点问题，语法确实是IS而不是= -->
+                    and Users.isbusiness IS #{usersCustom.isbusiness}
+                </if>
+                <!--
+                   了解：使用foreach遍历传入uids
+                    collection:指定输入对象中集合属性
+                    item:每个遍历生成对象
+                    open:开始遍历时拼接的串
+                    close:结束遍历时拼接的串
+                    separator:遍历的两个对象中需要拼接的串
+                    AND ( id=1 OR id=10 OR id=16)
+                   <if test="uids!=null and uids!=''">
+                       <foreach collection="uids" item="users_id" open="AND (" close=")" separator="OR">
+                           &lt;!&ndash; 每个遍历需要拼接的串 &ndash;&gt;
+                           Users.uid = #{users_id}
+                       </foreach>
+                   </if>
+                -->
+            </if>
+    </sql>
+
+    <select id="findUsersBy" parameterType="cn.wiesler.pojo.UsersQueryVo" resultMap="BaseResultMapCustom">
+        SELECT * FROM Users
+        <where>
+            <include refid="query_users_where" />
+            <!-- 在这里还要引用其他的SQL片段 -->
+        </where>
+    </select>
+
+    <!-- 利用UsersQueeryVo定义用户信息综合查询（查询条件复杂，通过高级查询进行复杂关联查询） -->
+    <!-- 动态SQL -->
+    <!--<select id="findUsersBy" parameterType="cn.wiesler.pojo.UsersQueryVo" resultMap="BaseResultMapCustom">
+        SELECT * FROM Users
+        <where>
+            <if test="usersCustom!=null">
+                <if test="usersCustom.uname!=null and usersCustom.uname!=''">
+                    &lt;!&ndash; 这里的表名一定是和数据库中表名大小写一致的，否则SQL语句执行会出错，不能忽略大小写 &ndash;&gt;
+                    and Users.uname LIKE '%${usersCustom.uname}%'
+                </if>
+            </if>
+        </where>
+    </select>-->
+
+
+
+
+
+</mapper>
