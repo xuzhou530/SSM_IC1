@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wiesler.dao.OrdersMapper" >
+    <!-- 查询订单关联查询用户信息的ResultMap -->
+    <!-- type:整个查询结果要映射到OrdersCustom中 -->
+    <resultMap id="OrdersUsersResultMap" type="cn.wiesler.pojo.OrdersCustom" >
+        <!-- Configuring Orders mapping information -->
+        <id column="OId" property="oid" jdbcType="INTEGER" />
+        <result column="UId" property="uid" jdbcType="INTEGER" />
+        <result column="ONumber" property="onumber" jdbcType="INTEGER" />
+        <!-- Configuring associated with Users mapping information -->
+        <!-- association:Used to map the information of a single object associated with a query -->
+        <!-- property:Mapping the user information of the associated query to OrdersCustom in which properties -->
+        <!-- javaType:Type of OrdersCustom in which properties -->
+        <association property="users" javaType="cn.wiesler.pojo.UsersCustom">
+            <id column="UId" property="uid"/>
+            <result column="UName" property="uname"/>
+            <result column="IsBusiness" property="isbusiness"/>
+        </association>
+    </resultMap>
+
+    <!-- 查询订单关联查询用户信息 -->
+    <select id="findOrdersUsers" resultMap="OrdersUsersResultMap" >
+        select Orders.*,Users.UName,Users.IsBusiness from Orders,Users where Orders.uid = Users.uid;
+        <!--select
+        <include refid="Base_Column_List" />
+        from Orders
+        where OId = #{oid,jdbcType=INTEGER}-->
+    </select>
+
+</mapper>
