@@ -12,11 +12,26 @@
         <!-- association:Used to map the information of a single object associated with a query -->
         <!-- property:Mapping the user information of the associated query to OrdersCustom in which properties -->
         <!-- javaType:Type of OrdersCustom in which properties -->
-        <association property="users" javaType="cn.wiesler.pojo.UsersCustom">
+        <association property="usersCustom" javaType="cn.wiesler.pojo.UsersCustom">
             <id column="UId" property="uid"/>
             <result column="UName" property="uname"/>
             <result column="IsBusiness" property="isbusiness"/>
         </association>
+    </resultMap>
+
+    <!-- Query Orders and OrderDetails ResultMap -->
+    <resultMap id="OrdersAndOrderDetailsResultMap" type="cn.wiesler.pojo.OrdersCustom" extends="OrdersUsersResultMap">
+        <!-- Configuring Orders mapping information -->
+        <!-- Configuring associated with Users mapping information -->
+
+        <!-- Configuring associated with OrderDetails mapping information -->
+        <!-- collection:Used to map the information of assemblage associated with a query  -->
+        <!-- ofType:The type which map to the POJO class in the list assemblage properties -->
+        <collection property="orderDetailsCustom" ofType="cn.wiesler.pojo.OrderDetailsCustom">
+            <id column="ODId" property="odid"/>
+            <result column="OId" property="oid"/>
+            <result column="DId" property="did"/>
+        </collection>
     </resultMap>
 
     <!-- 查询订单关联查询用户信息 -->
@@ -26,6 +41,12 @@
         <include refid="Base_Column_List" />
         from Orders
         where OId = #{oid,jdbcType=INTEGER}-->
+    </select>
+
+    <!-- Query Orders associated with Users and Orderdetails -->
+    <select id="findOrdersAndOrderDetails" resultMap="OrdersAndOrderDetailsResultMap" >
+        select Orders.*,Users.UName,Users.IsBusiness,OrderDetails.DId from Orders,Users,OrderDetails
+        where Orders.uid = Users.uid and Orders.OId = OrderDetails.OId;
     </select>
 
 </mapper>
