@@ -18,4 +18,5 @@ public class UsersCustom extends Users {
     public void setOrdersCustomList(List<OrdersCustom> ordersCustomList) {
         this.ordersCustomList = ordersCustomList;
     }
+
 }
