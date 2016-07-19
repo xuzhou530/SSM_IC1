@@ -20,21 +20,20 @@
         <td>用户ID</td>
         <td>用户名</td>
         <td>是否卖家</td>
-        <td>订单详情编号</td>
+        <td>订单详情ID</td>
     </tr>
-    <c:forEach items="${ordersCustom }" var="ordersCustom">
+    <c:forEach items="${ordersCustom }" var="_ordersCustom">
         <tr>
-            <td>${ordersCustom.oid}</td>
-            <td>${ordersCustom.onumber}</td>
-            <td>${ordersCustom.usersCustom.uid}</td>
-            <td>${ordersCustom.usersCustom.uname}</td>
-            <td>${ordersCustom.usersCustom.isbusiness}</td>
-            <td>${ordersCustom.orderDetailsCustom.odid}</td>
+            <td>${_ordersCustom.oid}</td>
+            <td>${_ordersCustom.onumber}</td>
+            <td>${_ordersCustom.usersCustom.uid}</td>
+            <td>${_ordersCustom.usersCustom.uname}</td>
+            <td>${_ordersCustom.usersCustom.isbusiness}</td>
+            <td><c:forEach items="${_ordersCustom.orderDetailsCustom }" var="list">
+                ${list.did }
+            </c:forEach></td>
         </tr>
     </c:forEach>
-    <%--<c:forEach items="">
-        <td>${ordersCustom.orderDetailsCustom.odid}</td>
-    </c:forEach>--%>
 </table>
 
 </body>
