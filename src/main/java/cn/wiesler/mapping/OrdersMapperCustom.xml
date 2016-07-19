@@ -34,19 +34,63 @@
         </collection>
     </resultMap>
 
-    <!-- 查询订单关联查询用户信息 -->
+    <!-- Query Users and Menu ResultMap -->
+    <!-- Attention:Master query is important, associated with type and id -->
+    <resultMap id="findUsersAndMenuResultMap" type="cn.wiesler.pojo.UsersCustom">
+        <!-- Configuring Users mapping information -->
+        <id column="UId" property="uid"/>
+        <result column="UName" property="uname"/>
+        <result column="IsBusiness" property="isbusiness"/>
+
+        <!-- Configuring Orders mapping information (A user includes a number of orders) -->
+        <collection property="ordersCustomList" ofType="cn.wiesler.pojo.OrdersCustom">
+            <id column="OId" property="oid" />
+            <result column="UId" property="uid" />
+            <result column="ONumber" property="onumber" />
+
+            <!-- Configuring Orders mapping information (A order includes a number of orderdetails) -->
+            <collection property="orderDetailsCustom" ofType="cn.wiesler.pojo.OrderDetailsCustom">
+                <id column="ODId" property="odid"/>
+                <result column="OId" property="oid"/>
+                <result column="DId" property="did"/>
+
+                <!-- Configuring Orderdetails mapping information (A orderdetail includes a menu) -->
+                <association property="menuCustom" javaType="cn.wiesler.pojo.MenuCustom">
+                    <id column="DId" property="did"/>
+                    <result column="DName" property="dname" />
+                    <result column="DPrice" property="dprice" />
+                    <result column="DType" property="dtype" />
+                </association>
+
+            </collection>
+
+        </collection>
+    </resultMap>
+
+    <!-- Query Orders associated with Users (one-to-one query) -->
+    <!-- General query which table, which is mapped to which type POJO -->
     <select id="findOrdersUsers" resultMap="OrdersUsersResultMap" >
-        select Orders.*,Users.UName,Users.IsBusiness from Orders,Users where Orders.uid = Users.uid;
+        select Orders.*,Users.UName,Users.IsBusiness
+        from Orders,Users
+        where Orders.uid = Users.uid;
         <!--select
         <include refid="Base_Column_List" />
         from Orders
         where OId = #{oid,jdbcType=INTEGER}-->
     </select>
 
-    <!-- Query Orders associated with Users and Orderdetails -->
+    <!-- Query Orders associated with Users and Orderdetails (one-to-multi query) -->
     <select id="findOrdersAndOrderDetails" resultMap="OrdersAndOrderDetailsResultMap" >
-        select Orders.*,Users.UName,Users.IsBusiness,OrderDetails.DId from Orders,Users,OrderDetails
+        select Orders.*,Users.UName,Users.IsBusiness,OrderDetails.DId
+        from Orders,Users,OrderDetails
         where Orders.uid = Users.uid and Orders.OId = OrderDetails.OId;
     </select>
 
+    <!-- Query Users associated with Orders and Orderdetails and Menu (multi-to-multi query) -->
+    <!-- In UsersMapperCustom.xml -->
+    <select id="findUsersAndMenu" resultMap="findUsersAndMenuResultMap">
+        select Orders.*,Users.UName,Users.IsBusiness,OrderDetails.DId,Menu.DName,Menu.DPrice,Menu.DType
+        from Orders,Users,OrderDetails,Menu
+        where Orders.uid = Users.uid and Orders.OId = OrderDetails.OId and OrderDetails.DId = Menu.DId;
+    </select>
 </mapper>
